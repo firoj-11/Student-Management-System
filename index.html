@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cohort — Student Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></div>
+      <div>
+        <div class="brand-name">Cohort</div>
+        <div class="brand-sub">Student Manager</div>
+      </div>
+    </div>
+    <div class="nav-group-label">Overview</div>
+    <button class="nav-item active" data-view="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+      Dashboard
+    </button>
+    <div class="nav-group-label">Manage</div>
+    <button class="nav-item" data-view="students">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Students <span class="badge-count" id="navStudentCount">0</span>
+    </button>
+    <button class="nav-item" data-view="attendance">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg>
+      Attendance
+    </button>
+    <button class="nav-item" data-view="grades">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+      Grades
+    </button>
+    <div class="nav-group-label">System</div>
+    <button class="nav-item" data-view="reports">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg>
+      Reports
+    </button>
+    <button class="nav-item" data-view="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+      Settings
+    </button>
+
+    <div class="sidebar-footer">
+      <div class="row">
+        <div class="mini-avatar">FN</div>
+        <div>
+          <div class="name">Firoj Naik</div>
+          <div class="role">Administrator</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search students by name, email, class…" />
+      </div>
+      <div class="topbar-spacer"></div>
+      <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="dot-badge"></span></button>
+      <div class="topbar-avatar">FN</div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <section class="view active" id="view-dashboard">
+      <div class="page-head">
+        <div>
+          <h1>Good to see you, Firoj 👋</h1>
+          <p id="dateLine"></p>
+        </div>
+        <button class="btn btn-primary" onclick="openStudentModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Add Student
+        </button>
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="chart-grid">
+        <div class="card">
+          <h3 class="card-title">Weekly Attendance Trend</h3>
+          <p class="card-sub">Present rate across all classes, last 7 days</p>
+          <div class="chart-box"><canvas id="attendanceChart"></canvas></div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Grade Distribution</h3>
+          <p class="card-sub">Overall performance across subjects</p>
+          <div class="chart-box"><canvas id="gradeChart"></canvas></div>
+          <div class="legend-row" id="gradeLegend"></div>
+        </div>
+      </div>
+
+      <div class="card section-block">
+        <div class="section-block-head">
+          <div>
+            <h3 class="card-title">Recently Added Students</h3>
+            <p class="card-sub" style="margin:0;">Newest enrollments this term</p>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="switchView('students')">View all</button>
+        </div>
+        <div class="row-list" id="recentStudentsList"></div>
+      </div>
+    </section>
+
+    <!-- STUDENTS VIEW -->
+    <section class="view" id="view-students">
+      <div class="page-head">
+        <div>
+          <h1>Students</h1>
+          <p>Manage enrollment, profiles, and class assignments.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openStudentModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Add Student
+        </button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="studentSearch" placeholder="Search students…" />
+        </div>
+        <select class="filter-select" id="classFilter"><option value="">All Classes</option></select>
+        <select class="filter-select" id="statusFilter">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <div class="row-list" id="studentsList"></div>
+        <div class="empty-state" id="studentsEmpty" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <p>No students match your filters.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ATTENDANCE VIEW -->
+    <section class="view" id="view-attendance">
+      <div class="page-head">
+        <div>
+          <h1>Attendance</h1>
+          <p>Mark daily attendance and track patterns.</p>
+        </div>
+      </div>
+      <div class="att-toolbar">
+        <input type="date" class="date-input" id="attDate" />
+        <select class="filter-select" id="attClassFilter"><option value="">All Classes</option></select>
+        <div class="toolbar-spacer"></div>
+        <button class="btn btn-primary btn-sm" onclick="saveAttendance()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          Save Attendance
+        </button>
+      </div>
+      <div class="att-summary" id="attSummary"></div>
+      <div class="card">
+        <div class="row-list" id="attendanceList"></div>
+      </div>
+    </section>
+
+    <!-- GRADES VIEW -->
+    <section class="view" id="view-grades">
+      <div class="page-head">
+        <div>
+          <h1>Grades</h1>
+          <p>Review and update subject-wise performance.</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <select class="filter-select" id="gradeClassFilter"><option value="">All Classes</option></select>
+        <select class="filter-select" id="gradeSubjectFilter"></select>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="grade-table" id="gradeTable">
+            <thead><tr><th>Student</th><th>Class</th><th>Score</th><th>Grade</th><th>Average (all subjects)</th></tr></thead>
+            <tbody id="gradeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS VIEW -->
+    <section class="view" id="view-reports">
+      <div class="page-head">
+        <div><h1>Reports</h1><p>Class-level snapshot of performance and attendance.</p></div>
+      </div>
+      <div class="card">
+        <div class="row-list" id="reportsList"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS VIEW -->
+    <section class="view" id="view-settings">
+      <div class="page-head">
+        <div><h1>Settings</h1><p>Institution preferences.</p></div>
+      </div>
+      <div class="card" style="max-width:520px;">
+        <div class="form-grid">
+          <div class="form-field full"><label>Institution Name</label><input type="text" value="Meridian High School"></div>
+          <div class="form-field"><label>Academic Year</label><input type="text" value="2026 – 2027"></div>
+          <div class="form-field"><label>Time Zone</label><input type="text" value="Asia/Kolkata"></div>
+          <div class="form-field full"><label>Contact Email</label><input type="email" value="admin@meridianhigh.edu"></div>
+        </div>
+        <div class="modal-actions"><button class="btn btn-primary">Save Changes</button></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- STUDENT MODAL -->
+<div class="modal-backdrop" id="studentModalBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="studentModalTitle">Add Student</h3>
+      <button class="modal-close" onclick="closeStudentModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form id="studentForm" onsubmit="return false;">
+        <div class="form-grid">
+          <div class="form-field full"><label>Full Name</label><input type="text" id="f_name" required placeholder="e.g. Ananya Sharma"></div>
+          <div class="form-field full"><label>Email Address</label><input type="email" id="f_email" required placeholder="student@school.edu"></div>
+          <div class="form-field"><label>Phone</label><input type="text" id="f_phone" placeholder="+91 98765 43210"></div>
+          <div class="form-field"><label>Gender</label>
+            <select id="f_gender"><option>Female</option><option>Male</option><option>Other</option></select>
+          </div>
+          <div class="form-field"><label>Class</label>
+            <select id="f_class"><option>Grade 9</option><option>Grade 10</option><option>Grade 11</option><option>Grade 12</option></select>
+          </div>
+          <div class="form-field"><label>Section</label>
+            <select id="f_section"><option>A</option><option>B</option><option>C</option></select>
+          </div>
+          <div class="form-field full"><label>Enrollment Date</label><input type="date" id="f_enroll"></div>
+          <div class="form-field full">
+            <label>Status</label>
+            <div class="status-toggle">
+              <button type="button" class="status-opt selected active-s" id="statusActiveBtn" onclick="setStatus('active')">Active</button>
+              <button type="button" class="status-opt" id="statusInactiveBtn" onclick="setStatus('inactive')">Inactive</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeStudentModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="submitStudentForm()">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-backdrop" id="deleteModalBackdrop">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-body" style="padding-top:26px;text-align:center;">
+      <div style="width:56px;height:56px;border-radius:16px;background:var(--grad-coral);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+      </div>
+      <h3 style="margin:0 0 6px;">Remove student?</h3>
+      <p style="color:var(--ink-soft);font-size:13.5px;margin:0 0 20px;" id="deleteModalText">This action can't be undone.</p>
+      <div class="modal-actions" style="justify-content:center;">
+        <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmDelete()">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT DETAIL DRAWER -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+<div class="drawer" id="studentDrawer">
+  <div id="drawerHeadContent"></div>
+  <div class="drawer-body">
+    <div class="tab-row">
+      <button class="tab-btn active" data-tab="profile" onclick="switchTab('profile')">Profile</button>
+      <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">Grades</button>
+      <button class="tab-btn" data-tab="attendance" onclick="switchTab('attendance')">Attendance</button>
+    </div>
+    <div class="tab-panel active" id="tab-profile"></div>
+    <div class="tab-panel" id="tab-grades"></div>
+    <div class="tab-panel" id="tab-attendance"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
