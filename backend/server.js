@@ -4,7 +4,7 @@ const cors = require('cors');
 
 // ADD THESE TWO LINES TO FIX RENDER DNS ISSUES
 const dns = require('dns');
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
+dns.setServers(["1.1.1.1" , "8.8.8.8"])
 
 const connectDB = require('./config/db');
 
