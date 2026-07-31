@@ -1,8 +1,9 @@
 /* ============================================================
    DATA MODEL
 ============================================================ */
-const SUBJECTS = ['Math','Science','English','History','Art'];
-const CLASSES = ['Grade 9','Grade 10','Grade 11','Grade 12'];
+const SUBJECTS = ['Database Systems', 'Java Programming', 'Data Structures', 'Web Development', 'Computer Networks'];
+const DEPARTMENTS = ['MCA', 'MBA'];
+const SEMESTERS = ['Semester 1', 'Semester 2', 'Semester 3', 'Semester 4', 'Semester 5', 'Semester 6'];
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg,#6d5df6,#46a0fc)',
   'linear-gradient(135deg,#1fcfa8,#63e6c4)',
@@ -20,7 +21,8 @@ let state = {
   deletingId: null,
   currentStatus: 'active',
   attendanceDate: todayISO(),
-  currentDrawerId: null
+  currentDrawerId: null,
+  role: 'admin'
 };
 
 function todayISO(){ return new Date().toISOString().slice(0,10); }
@@ -42,10 +44,10 @@ function dateMinus(n){
 
 function seedData(){
   const list = [];
-  for(let i=0;i<18;i++){
+  for(let i=0;i<24;i++){
     const name = FIRST_NAMES[i % FIRST_NAMES.length] + ' ' + LAST_NAMES[(i*3) % LAST_NAMES.length];
-    const cls = CLASSES[i % CLASSES.length];
-    const section = ['A','B','C'][i % 3];
+    const department = DEPARTMENTS[i % DEPARTMENTS.length];
+    const semester = SEMESTERS[i % SEMESTERS.length];
     const grades = {};
     SUBJECTS.forEach((s,idx)=>{ grades[s] = 55 + Math.floor(((i*13+idx*17)%46)); });
     const attendance = {};
@@ -56,10 +58,10 @@ function seedData(){
     list.push({
       id: uid(),
       name,
-      email: name.toLowerCase().replace(' ','.') + '@meridianhigh.edu',
+      email: name.toLowerCase().replace(' ','.') + '@cime.edu',
       phone: '+91 9' + (100000000 + i*7654321 % 899999999),
       gender: i%3===0?'Male':(i%3===1?'Female':'Other'),
-      cls, section,
+      department, semester,
       enrollDate: dateMinus(200 - i*4),
       status: i % 9 === 0 ? 'inactive' : 'active',
       avatar: hashPick(AVATAR_GRADIENTS, name),
@@ -77,17 +79,56 @@ const ICO = {
   mail: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>',
   phone: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
   cal: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
-  book: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>',
   eye: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>',
   edit: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>',
   trash: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>',
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>',
   alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>',
   users: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  trend:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
-  award:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg>',
   grad:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg>'
 };
+
+/* ============================================================
+   AUTH & THEME
+============================================================ */
+function handleLogin() {
+  const role = document.getElementById('loginRole').value;
+  state.role = role;
+  
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'flex';
+  
+  document.getElementById('displayRole').textContent = role === 'admin' ? 'Administrator' : 'User';
+  
+  if (role === 'user') {
+    document.body.classList.add('role-user');
+    switchView('attendance');
+  } else {
+    document.body.classList.remove('role-user');
+    switchView('dashboard');
+  }
+}
+
+function handleLogout() {
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('loginOverlay').style.display = 'flex';
+}
+
+function toggleTheme() {
+  const root = document.documentElement;
+  const curr = root.getAttribute('data-theme');
+  const next = curr === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  
+  if(attendanceChartInst) renderAttendanceChart();
+  if(deptChartInst) renderDeptChart();
+}
+document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
 
 /* ============================================================
    RENDER: NAVIGATION
@@ -112,35 +153,41 @@ function closeSidebarMobile(){
   document.getElementById('sidebarOverlay').classList.remove('open');
 }
 
+
 /* ============================================================
    DASHBOARD
 ============================================================ */
-let attendanceChartInst=null, gradeChartInst=null;
+let attendanceChartInst=null, deptChartInst=null;
 
 function computeStats(){
-  const total = state.students.length;
-  const active = state.students.filter(s=>s.status==='active').length;
-  let presentToday=0, recordedToday=0;
-  state.students.forEach(s=>{
+  const mcaStudents = state.students.filter(s=>s.department==='MCA');
+  const mbaStudents = state.students.filter(s=>s.department==='MBA');
+  const totalMCA = mcaStudents.length;
+  const totalMBA = mbaStudents.length;
+  
+  let mcaAttToday = 0;
+  mcaStudents.forEach(s=>{
     const rec = s.attendance[state.attendanceDate] || s.attendance[todayISO()];
-    if(rec){ recordedToday++; if(rec==='present') presentToday++; }
+    if(rec==='present') mcaAttToday++;
   });
-  const attRate = recordedToday? Math.round(presentToday/recordedToday*100) : 0;
-  let gradeSum=0, gradeCount=0;
-  state.students.forEach(s=>{ SUBJECTS.forEach(su=>{ gradeSum += s.grades[su]; gradeCount++; }); });
-  const avgGrade = gradeCount ? Math.round(gradeSum/gradeCount) : 0;
-  const classesActive = new Set(state.students.map(s=>s.cls)).size;
-  return {total, active, attRate, avgGrade, classesActive};
+  
+  let mbaAttToday = 0;
+  mbaStudents.forEach(s=>{
+    const rec = s.attendance[state.attendanceDate] || s.attendance[todayISO()];
+    if(rec==='present') mbaAttToday++;
+  });
+  
+  return {totalMCA, totalMBA, mcaAttToday, mbaAttToday};
 }
 
 function renderStatCards(){
   const st = computeStats();
   const grid = document.getElementById('statGrid');
   const cards = [
-    {label:'Total Students', value: st.total, icon:ICO.users, grad:'var(--grad-primary)', trend:'+'+Math.max(1,Math.round(st.total*0.08))+' this term', up:true},
-    {label:"Today's Attendance", value: st.attRate+'%', icon:ICO.cal, grad:'var(--grad-mint)', trend: st.attRate>=75? 'On track':'Needs attention', up: st.attRate>=75},
-    {label:'Average Grade', value: st.avgGrade+'%', icon:ICO.award, grad:'var(--grad-amber)', trend: letterGrade(st.avgGrade)+' average', up: st.avgGrade>=70},
-    {label:'Active Classes', value: st.classesActive, icon:ICO.grad, grad:'var(--grad-coral)', trend: st.active+' active students', up:true},
+    {label:'Total MCA Students', value: st.totalMCA, icon:ICO.users, grad:'var(--grad-primary)', trend:'MCA Program', up:true},
+    {label:'Total MBA Students', value: st.totalMBA, icon:ICO.users, grad:'var(--grad-amber)', trend:'MBA Program', up:true},
+    {label:"MCA Attendance Today", value: st.mcaAttToday, icon:ICO.cal, grad:'var(--grad-mint)', trend: 'Present Today', up: true},
+    {label:"MBA Attendance Today", value: st.mbaAttToday, icon:ICO.cal, grad:'var(--grad-coral)', trend: 'Present Today', up:true},
   ];
   grid.innerHTML = cards.map(c=>`
     <div class="card stat-card" style="--accent-grad:${c.grad}">
@@ -152,7 +199,7 @@ function renderStatCards(){
       <div class="stat-label">${c.label}</div>
     </div>
   `).join('');
-  document.getElementById('navStudentCount').textContent = st.total;
+  document.getElementById('navStudentCount').textContent = state.students.length;
 }
 
 function renderAttendanceChart(){
@@ -165,6 +212,11 @@ function renderAttendanceChart(){
     state.students.forEach(s=>{ const r=s.attendance[d]; if(r){total++; if(r==='present') present++;} });
     data.push(total? Math.round(present/total*100) : 0);
   }
+  
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(28,32,51,0.06)';
+  const textColor = isDark ? '#9aa1b5' : '#6b7280';
+  
   if(attendanceChartInst) attendanceChartInst.destroy();
   attendanceChartInst = new Chart(ctx, {
     type:'line',
@@ -182,26 +234,26 @@ function renderAttendanceChart(){
       responsive:true, maintainAspectRatio:false,
       plugins:{legend:{display:false}, tooltip:{backgroundColor:'#1c2033', padding:10, cornerRadius:10, displayColors:false}},
       scales:{
-        y:{min:0,max:100,grid:{color:'rgba(28,32,51,0.06)'}, ticks:{callback:v=>v+'%', color:'#9aa1b5', font:{size:11}}},
-        x:{grid:{display:false}, ticks:{color:'#9aa1b5', font:{size:11,weight:600}}}
+        y:{min:0,max:100,grid:{color:gridColor}, ticks:{callback:v=>v+'%', color:textColor, font:{size:11}}},
+        x:{grid:{display:false}, ticks:{color:textColor, font:{size:11,weight:600}}}
       }
     }
   });
 }
 
-function renderGradeChart(){
-  const ctx = document.getElementById('gradeChart');
-  const buckets = {A:0,B:0,C:0,D:0,F:0};
-  state.students.forEach(s=>{ SUBJECTS.forEach(su=>{ buckets[letterGrade(s.grades[su])]++; }); });
-  const colors = {A:'#1fcfa8',B:'#6d5df6',C:'#ffb648',D:'#ff9f43',F:'#ff6b81'};
-  if(gradeChartInst) gradeChartInst.destroy();
-  gradeChartInst = new Chart(ctx, {
+function renderDeptChart(){
+  const ctx = document.getElementById('deptChart');
+  const buckets = {MCA:0, MBA:0};
+  state.students.forEach(s=>{ buckets[s.department]++; });
+  const colors = {MCA:'#6d5df6', MBA:'#ffb648'};
+  if(deptChartInst) deptChartInst.destroy();
+  deptChartInst = new Chart(ctx, {
     type:'doughnut',
     data:{ labels:Object.keys(buckets), datasets:[{ data:Object.values(buckets), backgroundColor:Object.keys(buckets).map(k=>colors[k]), borderWidth:0, hoverOffset:6 }]},
     options:{ responsive:true, maintainAspectRatio:false, cutout:'68%', plugins:{legend:{display:false}, tooltip:{backgroundColor:'#1c2033', padding:10, cornerRadius:10}} }
   });
-  document.getElementById('gradeLegend').innerHTML = Object.keys(buckets).map(k=>`
-    <div class="legend-item"><span class="legend-dot" style="background:${colors[k]}"></span>Grade ${k} · ${buckets[k]}</div>
+  document.getElementById('deptLegend').innerHTML = Object.keys(buckets).map(k=>`
+    <div class="legend-item"><span class="legend-dot" style="background:${colors[k]}"></span>${k} Department · ${buckets[k]} Students</div>
   `).join('');
 }
 
@@ -221,7 +273,7 @@ function renderRecentStudents(){
   document.getElementById('recentStudentsList').innerHTML = recent.map(s=>personRowHTML(s, true)).join('') || emptyRow();
 }
 
-function emptyRow(){ return `<div class="empty-state"><p>No students yet — add your first one.</p></div>`; }
+function emptyRow(){ return `<div class="empty-state"><p>No data found.</p></div>`; }
 
 function personRowHTML(s, compact){
   const avg = studentAvgGrade(s);
@@ -233,7 +285,7 @@ function personRowHTML(s, compact){
       <div class="person-name">${s.name}</div>
       <div class="person-meta">${s.email}</div>
     </div>
-    <span class="pill pill-class">${s.cls} · ${s.section}</span>
+    <span class="pill pill-class">${s.department} · ${s.semester}</span>
     ${compact? '' : `<span class="pill ${s.status==='active'?'pill-active':'pill-inactive'}">${s.status}</span>`}
     <div class="grade-badge" style="background:${gradeColor(letter)}" title="Average ${avg}%">${letter}</div>
     <div class="row-actions">
@@ -248,33 +300,40 @@ function renderDashboard(){
   document.getElementById('dateLine').textContent = new Date().toLocaleDateString('en-US',{weekday:'long', year:'numeric', month:'long', day:'numeric'});
   renderStatCards();
   renderAttendanceChart();
-  renderGradeChart();
+  renderDeptChart();
   renderRecentStudents();
 }
 
 /* ============================================================
    STUDENTS VIEW
 ============================================================ */
-function populateClassFilters(){
-  ['classFilter','attClassFilter','gradeClassFilter'].forEach(id=>{
-    const sel = document.getElementById(id);
-    const cur = sel.value;
-    sel.innerHTML = '<option value="">All Classes</option>' + CLASSES.map(c=>`<option value="${c}">${c}</option>`).join('');
-    sel.value = cur;
-  });
-  const subjSel = document.getElementById('gradeSubjectFilter');
-  subjSel.innerHTML = SUBJECTS.map(s=>`<option value="${s}">${s}</option>`).join('');
+function populateFilters(){
+  const deptOpts = '<option value="">All Departments</option>' + DEPARTMENTS.map(d=>`<option value="${d}">${d}</option>`).join('');
+  const semOpts = '<option value="">All Semesters</option>' + SEMESTERS.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+  document.getElementById('deptFilter').innerHTML = deptOpts;
+  document.getElementById('semFilter').innerHTML = semOpts;
+
+  document.getElementById('attDeptFilter').innerHTML = deptOpts.replace('All Departments','Select Department');
+  document.getElementById('attSemFilter').innerHTML = semOpts.replace('All Semesters','Select Semester');
+
+  document.getElementById('resDeptFilter').innerHTML = deptOpts;
+  document.getElementById('resSemFilter').innerHTML = semOpts;
+  document.getElementById('resSubjectFilter').innerHTML = SUBJECTS.map(s=>`<option value="${s}">${s}</option>`).join('');
 }
 
 function getFilteredStudents(){
   const q = (document.getElementById('studentSearch').value || '').toLowerCase();
-  const cls = document.getElementById('classFilter').value;
+  const dept = document.getElementById('deptFilter').value;
+  const sem = document.getElementById('semFilter').value;
   const status = document.getElementById('statusFilter').value;
+  
   return state.students.filter(s=>{
-    const matchQ = !q || s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q) || s.cls.toLowerCase().includes(q);
-    const matchC = !cls || s.cls===cls;
+    const matchQ = !q || s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q) || s.department.toLowerCase().includes(q);
+    const matchD = !dept || s.department===dept;
+    const matchSem = !sem || s.semester===sem;
     const matchS = !status || s.status===status;
-    return matchQ && matchC && matchS;
+    return matchQ && matchD && matchSem && matchS;
   });
 }
 
@@ -287,7 +346,7 @@ function renderStudentsList(){
   container.innerHTML = list.map(s=>personRowHTML(s,false)).join('');
 }
 
-['studentSearch','classFilter','statusFilter'].forEach(id=>{
+['studentSearch','deptFilter','semFilter','statusFilter'].forEach(id=>{
   document.getElementById(id).addEventListener('input', renderStudentsList);
 });
 document.getElementById('globalSearch').addEventListener('input', (e)=>{
@@ -296,7 +355,7 @@ document.getElementById('globalSearch').addEventListener('input', (e)=>{
   renderStudentsList();
 });
 
-/* Student modal (add/edit) */
+/* Student modal */
 function openStudentModal(id){
   state.editingId = id || null;
   const backdrop = document.getElementById('studentModalBackdrop');
@@ -307,8 +366,8 @@ function openStudentModal(id){
     document.getElementById('f_email').value = s.email;
     document.getElementById('f_phone').value = s.phone;
     document.getElementById('f_gender').value = s.gender;
-    document.getElementById('f_class').value = s.cls;
-    document.getElementById('f_section').value = s.section;
+    document.getElementById('f_dept').value = s.department;
+    document.getElementById('f_sem').value = s.semester;
     document.getElementById('f_enroll').value = s.enrollDate;
     setStatus(s.status);
   } else {
@@ -332,8 +391,8 @@ function submitStudentForm(){
     name, email,
     phone: document.getElementById('f_phone').value.trim(),
     gender: document.getElementById('f_gender').value,
-    cls: document.getElementById('f_class').value,
-    section: document.getElementById('f_section').value,
+    department: document.getElementById('f_dept').value,
+    semester: document.getElementById('f_sem').value,
     enrollDate: document.getElementById('f_enroll').value || todayISO(),
     status: state.currentStatus
   };
@@ -374,9 +433,19 @@ function confirmDelete(){
 ============================================================ */
 function renderAttendanceView(){
   document.getElementById('attDate').value = state.attendanceDate;
-  const cls = document.getElementById('attClassFilter').value;
-  const list = state.students.filter(s=> !cls || s.cls===cls);
+  const dept = document.getElementById('attDeptFilter').value;
+  const sem = document.getElementById('attSemFilter').value;
+  
   const container = document.getElementById('attendanceList');
+  
+  if(!dept || !sem) {
+    container.innerHTML = `<div class="empty-state"><p>Please select a Department and Semester to load students.</p></div>`;
+    document.getElementById('attSummary').innerHTML = '';
+    return;
+  }
+  
+  const list = state.students.filter(s=> s.department===dept && s.semester===sem);
+  
   container.innerHTML = list.map(s=>{
     const rec = s.attendance[state.attendanceDate] || 'present';
     return `
@@ -384,7 +453,7 @@ function renderAttendanceView(){
       <div class="avatar" style="background:${s.avatar}">${initials(s.name)}</div>
       <div class="person-info">
         <div class="person-name">${s.name}</div>
-        <div class="person-meta">${s.cls} · ${s.section}</div>
+        <div class="person-meta">${s.department} · ${s.semester}</div>
       </div>
       <div class="att-toggle-group">
         <button class="att-toggle p ${rec==='present'?'selected':''}" onclick="setAttMark('${s.id}','present')">P</button>
@@ -395,11 +464,13 @@ function renderAttendanceView(){
   }).join('') || emptyRow();
   renderAttSummary(list);
 }
+
 function setAttMark(id, mark){
   const s = state.students.find(x=>x.id===id);
   s.attendance[state.attendanceDate] = mark;
   renderAttendanceView();
 }
+
 function renderAttSummary(list){
   let p=0,a=0,l=0;
   list.forEach(s=>{
@@ -417,16 +488,28 @@ document.getElementById('attDate').addEventListener('change', (e)=>{
   state.attendanceDate = e.target.value || todayISO();
   renderAttendanceView();
 });
-document.getElementById('attClassFilter').addEventListener('change', renderAttendanceView);
+document.getElementById('attDeptFilter').addEventListener('change', renderAttendanceView);
+document.getElementById('attSemFilter').addEventListener('change', renderAttendanceView);
 function saveAttendance(){ showToast('Attendance saved for ' + state.attendanceDate + '.', 'success'); renderDashboard(); }
 
 /* ============================================================
-   GRADES VIEW
+   RESULTS VIEW (Formerly Grades)
 ============================================================ */
-function renderGradesView(){
-  const cls = document.getElementById('gradeClassFilter').value;
-  const subj = document.getElementById('gradeSubjectFilter').value || SUBJECTS[0];
-  const list = state.students.filter(s=> !cls || s.cls===cls);
+function renderResultsView(){
+  const dept = document.getElementById('resDeptFilter').value;
+  const sem = document.getElementById('resSemFilter').value;
+  const subj = document.getElementById('resSubjectFilter').value || SUBJECTS[0];
+  const sort = document.getElementById('resSortFilter').value;
+  
+  let list = state.students.filter(s=> (!dept || s.department===dept) && (!sem || s.semester===sem));
+  
+  // Sort Logic
+  if (sort === 'rank') {
+    list.sort((a,b) => studentAvgGrade(b) - studentAvgGrade(a));
+  } else {
+    list.sort((a,b) => a.name.localeCompare(b.name));
+  }
+
   document.getElementById('gradeTableBody').innerHTML = list.map(s=>{
     const score = s.grades[subj];
     const letter = letterGrade(score);
@@ -434,7 +517,7 @@ function renderGradesView(){
     return `
     <tr>
       <td><div style="display:flex;align-items:center;gap:10px;"><div class="avatar" style="width:32px;height:32px;font-size:11.5px;background:${s.avatar}">${initials(s.name)}</div>${s.name}</div></td>
-      <td>${s.cls} · ${s.section}</td>
+      <td>${s.department} · ${s.semester}</td>
       <td><input type="number" min="0" max="100" class="grade-input" value="${score}" onchange="updateGrade('${s.id}','${subj}',this.value)"></td>
       <td><span class="grade-badge" style="background:${gradeColor(letter)};width:30px;height:30px;font-size:12px;">${letter}</span></td>
       <td class="avg-cell">${avg}%</td>
@@ -446,35 +529,42 @@ function updateGrade(id, subj, val){
   let v = parseInt(val,10); if(isNaN(v)) v=0; v = Math.max(0,Math.min(100,v));
   s.grades[subj] = v;
   showToast(`Updated ${subj} score for ${s.name}.`, 'success');
-  renderGradesView();
+  renderResultsView();
   renderStatCards();
-  renderGradeChart();
+  renderDeptChart();
 }
-document.getElementById('gradeClassFilter').addEventListener('change', renderGradesView);
-document.getElementById('gradeSubjectFilter').addEventListener('change', renderGradesView);
+['resDeptFilter', 'resSemFilter', 'resSubjectFilter', 'resSortFilter'].forEach(id => {
+  document.getElementById(id).addEventListener('change', renderResultsView);
+});
 
 /* ============================================================
    REPORTS VIEW
 ============================================================ */
 function renderReports(){
-  const rows = CLASSES.map(cls=>{
-    const list = state.students.filter(s=>s.cls===cls);
-    if(!list.length) return {cls, count:0, avg:0, att:0};
-    const avg = Math.round(list.reduce((a,s)=>a+studentAvgGrade(s),0)/list.length);
-    const att = Math.round(list.reduce((a,s)=>a+studentAttendanceRate(s),0)/list.length);
-    return {cls, count:list.length, avg, att};
-  });
-  document.getElementById('reportsList').innerHTML = rows.map(r=>`
-    <div class="person-row">
-      <div class="avatar" style="background:var(--grad-primary)">${r.cls.split(' ')[1]}</div>
-      <div class="person-info">
-        <div class="person-name">${r.cls}</div>
-        <div class="person-meta">${r.count} students enrolled</div>
-      </div>
-      <span class="pill pill-class">Avg grade ${r.avg}%</span>
-      <span class="pill ${r.att>=75?'pill-active':'pill-inactive'}">Attendance ${r.att}%</span>
-    </div>
-  `).join('');
+  const generateReportHTML = (dept) => {
+    return SEMESTERS.map(sem=>{
+      const list = state.students.filter(s=>s.department===dept && s.semester===sem);
+      if(!list.length) return `<div class="person-row"><div class="person-info"><div class="person-name">${sem}</div><div class="person-meta">0 students enrolled</div></div></div>`;
+      
+      const avg = Math.round(list.reduce((a,s)=>a+studentAvgGrade(s),0)/list.length);
+      const att = Math.round(list.reduce((a,s)=>a+studentAttendanceRate(s),0)/list.length);
+      
+      return `
+        <div class="person-row">
+          <div class="avatar" style="background:var(--grad-primary)">${sem.split(' ')[1]}</div>
+          <div class="person-info">
+            <div class="person-name">${sem}</div>
+            <div class="person-meta">${list.length} students enrolled</div>
+          </div>
+          <span class="pill pill-class">Avg grade ${avg}%</span>
+          <span class="pill ${att>=75?'pill-active':'pill-inactive'}">Attendance ${att}%</span>
+        </div>
+      `;
+    }).join('');
+  };
+
+  document.getElementById('mcaReportsList').innerHTML = generateReportHTML('MCA');
+  document.getElementById('mbaReportsList').innerHTML = generateReportHTML('MBA');
 }
 
 /* ============================================================
@@ -488,7 +578,7 @@ function openDrawer(id){
       <div>
         <div class="avatar" style="background:rgba(255,255,255,0.28)">${initials(s.name)}</div>
         <div class="drawer-name">${s.name}</div>
-        <div class="drawer-meta">${s.cls} · Section ${s.section}</div>
+        <div class="drawer-meta">${s.department} · ${s.semester}</div>
       </div>
       <button class="modal-close" style="background:rgba(255,255,255,0.2);" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>`;
@@ -546,15 +636,15 @@ function showToast(msg, type){
    INIT / REFRESH
 ============================================================ */
 function refreshAll(){
-  populateClassFilters();
+  populateFilters();
   renderDashboard();
   renderStudentsList();
   renderAttendanceView();
-  renderGradesView();
+  renderResultsView();
 }
 function init(){
   state.students = seedData();
-  populateClassFilters();
+  populateFilters();
   refreshAll();
 }
 init();
