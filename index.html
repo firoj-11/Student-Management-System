@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cohort — Student Management System</title>
+<title>Cohort — University ERP System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
@@ -15,24 +15,65 @@
 <div class="orb orb2"></div>
 <div class="orb orb3"></div>
 
-<div class="app">
+<!-- LOGIN PAGE -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="card login-card">
+    <div class="brand" style="justify-content:center; padding-bottom: 20px;">
+      <div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></div>
+      <div>
+        <div class="brand-name">Cohort ERP</div>
+        <div class="brand-sub">CIME Portal</div>
+      </div>
+    </div>
+    <form id="loginForm" onsubmit="return false;">
+      <div class="form-grid" style="grid-template-columns: 1fr;">
+        <div class="form-field full">
+          <label>Email Address</label>
+          <input type="email" id="loginEmail" placeholder="admin@cime.edu" required value="admin@cime.edu">
+        </div>
+        <div class="form-field full">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••" required value="password">
+        </div>
+        <div class="form-field full">
+          <label>Role</label>
+          <select id="loginRole">
+            <option value="admin">Administrator (Full Access)</option>
+            <option value="user">User (Attendance Only)</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin: 16px 0;">
+        <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--ink-soft); cursor:pointer;">
+          <input type="checkbox" id="rememberMe"> Remember Me
+        </label>
+        <a href="#" style="font-size:13px; color:var(--violet); text-decoration:none; font-weight:600;">Forgot Password?</a>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" onclick="handleLogin()">Login to ERP</button>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="mainApp" style="display:none;">
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></div>
       <div>
-        <div class="brand-name">Cohort</div>
-        <div class="brand-sub">Student Manager</div>
+        <div class="brand-name">Cohort ERP</div>
+        <div class="brand-sub">University Manager</div>
       </div>
     </div>
-    <div class="nav-group-label">Overview</div>
-    <button class="nav-item active" data-view="dashboard">
+    
+    <div class="nav-group-label admin-only">Overview</div>
+    <button class="nav-item active admin-only" data-view="dashboard">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
       Dashboard
     </button>
+    
     <div class="nav-group-label">Manage</div>
-    <button class="nav-item" data-view="students">
+    <button class="nav-item admin-only" data-view="students">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Students <span class="badge-count" id="navStudentCount">0</span>
     </button>
@@ -40,16 +81,17 @@
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg>
       Attendance
     </button>
-    <button class="nav-item" data-view="grades">
+    <button class="nav-item admin-only" data-view="results">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
-      Grades
+      Results
     </button>
-    <div class="nav-group-label">System</div>
-    <button class="nav-item" data-view="reports">
+    
+    <div class="nav-group-label admin-only">System</div>
+    <button class="nav-item admin-only" data-view="reports">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg>
       Reports
     </button>
-    <button class="nav-item" data-view="settings">
+    <button class="nav-item admin-only" data-view="settings">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
       Settings
     </button>
@@ -59,8 +101,11 @@
         <div class="mini-avatar">FN</div>
         <div>
           <div class="name">Firoj Naik</div>
-          <div class="role">Administrator</div>
+          <div class="role" id="displayRole">Administrator</div>
         </div>
+        <button class="icon-btn-sm" title="Logout" onclick="handleLogout()" style="margin-left:auto;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
       </div>
     </div>
   </aside>
@@ -73,15 +118,21 @@
       </button>
       <div class="search-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" id="globalSearch" placeholder="Search students by name, email, class…" />
+        <input type="text" id="globalSearch" placeholder="Search students by name, email, department…" />
       </div>
       <div class="topbar-spacer"></div>
+      
+      <!-- Theme Toggle -->
+      <button class="icon-btn" id="themeToggleBtn" title="Toggle Theme">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+
       <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="dot-badge"></span></button>
       <div class="topbar-avatar">FN</div>
     </div>
 
     <!-- DASHBOARD VIEW -->
-    <section class="view active" id="view-dashboard">
+    <section class="view admin-only active" id="view-dashboard">
       <div class="page-head">
         <div>
           <h1>Good to see you, Firoj 👋</h1>
@@ -97,15 +148,15 @@
 
       <div class="chart-grid">
         <div class="card">
-          <h3 class="card-title">Weekly Attendance Trend</h3>
-          <p class="card-sub">Present rate across all classes, last 7 days</p>
+          <h3 class="card-title">Department Attendance Trend</h3>
+          <p class="card-sub">Present rate across MCA & MBA, last 7 days</p>
           <div class="chart-box"><canvas id="attendanceChart"></canvas></div>
         </div>
         <div class="card">
-          <h3 class="card-title">Grade Distribution</h3>
-          <p class="card-sub">Overall performance across subjects</p>
-          <div class="chart-box"><canvas id="gradeChart"></canvas></div>
-          <div class="legend-row" id="gradeLegend"></div>
+          <h3 class="card-title">Department Distribution</h3>
+          <p class="card-sub">Student breakdown by program</p>
+          <div class="chart-box"><canvas id="deptChart"></canvas></div>
+          <div class="legend-row" id="deptLegend"></div>
         </div>
       </div>
 
@@ -122,11 +173,11 @@
     </section>
 
     <!-- STUDENTS VIEW -->
-    <section class="view" id="view-students">
+    <section class="view admin-only" id="view-students">
       <div class="page-head">
         <div>
           <h1>Students</h1>
-          <p>Manage enrollment, profiles, and class assignments.</p>
+          <p>Manage enrollment, profiles, and department assignments.</p>
         </div>
         <button class="btn btn-primary" onclick="openStudentModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
@@ -139,7 +190,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input type="text" id="studentSearch" placeholder="Search students…" />
         </div>
-        <select class="filter-select" id="classFilter"><option value="">All Classes</option></select>
+        <select class="filter-select" id="deptFilter"><option value="">All Departments</option></select>
+        <select class="filter-select" id="semFilter"><option value="">All Semesters</option></select>
         <select class="filter-select" id="statusFilter">
           <option value="">All Status</option>
           <option value="active">Active</option>
@@ -166,7 +218,8 @@
       </div>
       <div class="att-toolbar">
         <input type="date" class="date-input" id="attDate" />
-        <select class="filter-select" id="attClassFilter"><option value="">All Classes</option></select>
+        <select class="filter-select" id="attDeptFilter"><option value="">Select Department</option></select>
+        <select class="filter-select" id="attSemFilter"><option value="">Select Semester</option></select>
         <div class="toolbar-spacer"></div>
         <button class="btn btn-primary btn-sm" onclick="saveAttendance()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
@@ -175,26 +228,37 @@
       </div>
       <div class="att-summary" id="attSummary"></div>
       <div class="card">
-        <div class="row-list" id="attendanceList"></div>
+        <div class="row-list" id="attendanceList">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <p>Please select a Department and Semester to load students.</p>
+            </div>
+        </div>
       </div>
     </section>
 
-    <!-- GRADES VIEW -->
-    <section class="view" id="view-grades">
+    <!-- RESULTS VIEW (Formerly Grades) -->
+    <section class="view admin-only" id="view-results">
       <div class="page-head">
         <div>
-          <h1>Grades</h1>
-          <p>Review and update subject-wise performance.</p>
+          <h1>Results Module</h1>
+          <p>Review and update performance by Department and Semester.</p>
         </div>
       </div>
       <div class="toolbar">
-        <select class="filter-select" id="gradeClassFilter"><option value="">All Classes</option></select>
-        <select class="filter-select" id="gradeSubjectFilter"></select>
+        <select class="filter-select" id="resDeptFilter"><option value="">All Departments</option></select>
+        <select class="filter-select" id="resSemFilter"><option value="">All Semesters</option></select>
+        <select class="filter-select" id="resSubjectFilter"></select>
+        <div class="toolbar-spacer"></div>
+        <select class="filter-select" id="resSortFilter">
+          <option value="alpha">Sort: Alphabetically</option>
+          <option value="rank">Sort: Rank Wise</option>
+        </select>
       </div>
       <div class="card">
         <div class="table-wrap">
           <table class="grade-table" id="gradeTable">
-            <thead><tr><th>Student</th><th>Class</th><th>Score</th><th>Grade</th><th>Average (all subjects)</th></tr></thead>
+            <thead><tr><th>Student</th><th>Program</th><th>Score</th><th>Grade</th><th>Average (all subjects)</th></tr></thead>
             <tbody id="gradeTableBody"></tbody>
           </table>
         </div>
@@ -202,26 +266,33 @@
     </section>
 
     <!-- REPORTS VIEW -->
-    <section class="view" id="view-reports">
+    <section class="view admin-only" id="view-reports">
       <div class="page-head">
-        <div><h1>Reports</h1><p>Class-level snapshot of performance and attendance.</p></div>
+        <div><h1>Reports</h1><p>Department-level snapshot of performance and attendance.</p></div>
       </div>
+      
+      <h3 class="card-title" style="margin:20px 0 10px;">MCA Report</h3>
+      <div class="card" style="margin-bottom:24px;">
+        <div class="row-list" id="mcaReportsList"></div>
+      </div>
+
+      <h3 class="card-title" style="margin:20px 0 10px;">MBA Report</h3>
       <div class="card">
-        <div class="row-list" id="reportsList"></div>
+        <div class="row-list" id="mbaReportsList"></div>
       </div>
     </section>
 
     <!-- SETTINGS VIEW -->
-    <section class="view" id="view-settings">
+    <section class="view admin-only" id="view-settings">
       <div class="page-head">
         <div><h1>Settings</h1><p>Institution preferences.</p></div>
       </div>
       <div class="card" style="max-width:520px;">
         <div class="form-grid">
-          <div class="form-field full"><label>Institution Name</label><input type="text" value="Meridian High School"></div>
+          <div class="form-field full"><label>Institution Name</label><input type="text" value="College of IT and Management Education (CIME)"></div>
           <div class="form-field"><label>Academic Year</label><input type="text" value="2026 – 2027"></div>
           <div class="form-field"><label>Time Zone</label><input type="text" value="Asia/Kolkata"></div>
-          <div class="form-field full"><label>Contact Email</label><input type="email" value="admin@meridianhigh.edu"></div>
+          <div class="form-field full"><label>Contact Email</label><input type="email" value="admin@cime.edu"></div>
         </div>
         <div class="modal-actions"><button class="btn btn-primary">Save Changes</button></div>
       </div>
@@ -245,11 +316,11 @@
           <div class="form-field"><label>Gender</label>
             <select id="f_gender"><option>Female</option><option>Male</option><option>Other</option></select>
           </div>
-          <div class="form-field"><label>Class</label>
-            <select id="f_class"><option>Grade 9</option><option>Grade 10</option><option>Grade 11</option><option>Grade 12</option></select>
+          <div class="form-field"><label>Department</label>
+            <select id="f_dept"><option>MCA</option><option>MBA</option></select>
           </div>
-          <div class="form-field"><label>Section</label>
-            <select id="f_section"><option>A</option><option>B</option><option>C</option></select>
+          <div class="form-field"><label>Semester</label>
+            <select id="f_sem"><option>Semester 1</option><option>Semester 2</option><option>Semester 3</option><option>Semester 4</option><option>Semester 5</option><option>Semester 6</option></select>
           </div>
           <div class="form-field full"><label>Enrollment Date</label><input type="date" id="f_enroll"></div>
           <div class="form-field full">
@@ -293,7 +364,7 @@
   <div class="drawer-body">
     <div class="tab-row">
       <button class="tab-btn active" data-tab="profile" onclick="switchTab('profile')">Profile</button>
-      <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">Grades</button>
+      <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">Results</button>
       <button class="tab-btn" data-tab="attendance" onclick="switchTab('attendance')">Attendance</button>
     </div>
     <div class="tab-panel active" id="tab-profile"></div>
